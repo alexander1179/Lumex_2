@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
     fontSize: 20
   },
   forgot: {
-    color: "#ff5252",
+    color: colors.primary,
     textAlign: "right",
     marginBottom: 15,
     fontSize: 14

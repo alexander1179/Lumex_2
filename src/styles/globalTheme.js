@@ -14,15 +14,15 @@ export const globalFonts = {
 
 // 🔥 TEMA GLOBAL - SE PUEDE IMPORTAR DIRECTAMENTE 🔥
 export const globalTheme = {
-  primary: "#d32f2f",
-  primaryDark: "#b71c1c",
-  primaryLight: "#ff6659",
+  primary: "#03a9f4",
+  primaryDark: "#0288d1",
+  primaryLight: "#b3e5fc",
   
   background: {
     primary: "#f5f5f5",
     secondary: "#ffffff",
     card: "#ffffff",
-    header: "#d32f2f",
+    header: "#03a9f4",
     input: "#f0f0f0",
     modal: "#ffffff",
   },
@@ -35,7 +35,7 @@ export const globalTheme = {
     error: "#ff5252",
     success: "#4caf50",
     warning: "#ff9800",
-    link: "#d32f2f",
+    link: "#03a9f4",
   },
   
   border: {
@@ -95,9 +95,9 @@ export const globalTheme = {
 
 // 🔥 TEMA OSCURO GLOBAL 🔥
 export const globalDarkTheme = {
-  primary: "#d32f2f",
-  primaryDark: "#b71c1c",
-  primaryLight: "#ff6659",
+  primary: "#03a9f4",
+  primaryDark: "#0288d1",
+  primaryLight: "#b3e5fc",
   
   background: {
     primary: "#121212",
@@ -116,7 +116,7 @@ export const globalDarkTheme = {
     error: "#ff5252",
     success: "#4caf50",
     warning: "#ff9800",
-    link: "#ff6659",
+    link: "#b3e5fc",
   },
   
   border: {

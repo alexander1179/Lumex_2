@@ -1,8 +1,8 @@
 // src/styles/colors.js
 export const colors = {
-  primary: "#d32f2f",
-  primaryDark: "#b71c1c",
-  primaryLight: "#ff6659",
+  primary: "#03a9f4",
+  primaryDark: "#0288d1",
+  primaryLight: "#b3e5fc",
   
   secondary: "#1c1c1c",
   secondaryLight: "#333",

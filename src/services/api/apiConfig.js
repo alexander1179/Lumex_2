@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 
 export const API_URL = Platform.OS === "web" 
   ? "http://localhost:3000" 
-  : "http://10.157.28.25:3000";
+  : "http://192.168.20.141:3000";
 
 export const endpoints = {
   login: '/login',

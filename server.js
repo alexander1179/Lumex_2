@@ -13,7 +13,7 @@ const pool = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "123456",
-  database: "rna_autoencoder",
+  database: "lumex_2",
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -64,7 +64,7 @@ const enviarSMS = (telefono, token) => {
 (async () => {
   try {
     const connection = await db.getConnection();
-    console.log("✅ Conectado a MySQL (rna_autoencoder)");
+    console.log("✅ Conectado a MySQL (lumex_2)");
     
     // Verificar que la tabla password_resets existe
     const [tables] = await connection.query("SHOW TABLES LIKE 'password_resets'");
@@ -477,7 +477,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`\n🚀 Servidor corriendo en puerto ${PORT}`);
   console.log(`🌐 Acceso local: http://localhost:${PORT}`);
-  console.log(`📱 Acceso red:   http://10.157.28.25:${PORT}`);
+  console.log(`📱 Acceso red:   http://192.168.20.141:${PORT}`);
   console.log("\n📧 Sistema de recuperación por EMAIL activado");
   console.log("📱 Sistema de recuperación por SMS (simulado) activado\n");
 });

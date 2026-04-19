@@ -1,4 +1,5 @@
 require('dotenv').config();
+const crypto = require('crypto');
 
 const express = require("express");
 const mysql = require("mysql2");
@@ -268,7 +269,7 @@ app.post("/forgot-password", async (req, res) => {
       }
 
       const user = rows[0];
-      const token = Math.floor(100000 + Math.random() * 900000).toString();
+      const token = crypto.randomInt(100000, 999999).toString();
       const expiresAt = new Date(Date.now() + 15 * 60000);
 
       await db.query(
@@ -342,7 +343,7 @@ app.post("/forgot-password", async (req, res) => {
         telefono: user.telefono
       });
 
-      const token = Math.floor(100000 + Math.random() * 900000).toString();
+      const token = crypto.randomInt(100000, 999999).toString();
       const expiresAt = new Date(Date.now() + 15 * 60000);
 
       await db.query(

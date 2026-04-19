@@ -390,7 +390,7 @@ app.post("/forgot-password", async (req, res) => {
     console.error("❌ ERROR GENERAL:", error);
     res.status(500).json({
       success: false,
-      message: "Error al procesar la solicitud: " + error.message
+      message: "Error interno del servidor"
     });
   }
 });

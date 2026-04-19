@@ -1,5 +1,6 @@
 require('dotenv').config();
 const crypto = require('crypto');
+const helmet = require('helmet');
 
 const express = require("express");
 const mysql = require("mysql2");
@@ -8,6 +9,8 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
 const app = express();
+
+app.use(helmet());
 
 app.use(cors({
   origin: [

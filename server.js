@@ -8,7 +8,14 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:19006'
+  ]
+}));
+
 app.use(express.json());
 
 const pool = mysql.createPool({

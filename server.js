@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -12,7 +14,7 @@ app.use(express.json());
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "123456",
+  password: process.env.DB_PASSWORD,
   database: "lumex_2",
   waitForConnections: true,
   connectionLimit: 10,
@@ -37,7 +39,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Verificar la conexión
-transporter.verify(function(error, success) {
+transporter.verify(function (error, success) {
   if (error) {
     console.log('❌ Error en configuración de email:', error);
     console.log('📝 Verifica que:');
@@ -55,7 +57,7 @@ const enviarSMS = (telefono, token) => {
   console.log(`📱 Número: ${telefono}`);
   console.log(`🔐 Código: ${token}`);
   console.log("📱".repeat(20) + "\n");
-  
+
   // En una app real, aquí iría la integración con Twilio
   return true;
 };
@@ -65,7 +67,7 @@ const enviarSMS = (telefono, token) => {
   try {
     const connection = await db.getConnection();
     console.log("✅ Conectado a MySQL (lumex_2)");
-    
+
     // Verificar que la tabla password_resets existe
     const [tables] = await connection.query("SHOW TABLES LIKE 'password_resets'");
     if (tables.length === 0) {
@@ -84,7 +86,7 @@ const enviarSMS = (telefono, token) => {
       `);
       console.log("✅ Tabla password_resets creada");
     }
-    
+
     connection.release();
   } catch (err) {
     console.log("❌ Error de conexión:", err.message);
@@ -223,7 +225,7 @@ app.post("/register", async (req, res) => {
 
   } catch (error) {
     console.error("❌ ERROR en registro:", error);
-    
+
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({
         success: false,
@@ -256,7 +258,7 @@ app.post("/forgot-password", async (req, res) => {
           message: "Debes proporcionar tu correo electrónico"
         });
       }
-      
+
       const [rows] = await db.query("SELECT * FROM usuarios WHERE email = ?", [email]);
 
       if (rows.length === 0) {
@@ -316,9 +318,9 @@ app.post("/forgot-password", async (req, res) => {
         // Intentar búsqueda sin el '+'
         const telefonoLimpio = telefono.replace('+', '');
         console.log(`🔍 Buscando sin +: "${telefonoLimpio}"`);
-        
+
         const [rows2] = await db.query(
-          "SELECT * FROM usuarios WHERE REPLACE(telefono, '+', '') = ?", 
+          "SELECT * FROM usuarios WHERE REPLACE(telefono, '+', '') = ?",
           [telefonoLimpio]
         );
 

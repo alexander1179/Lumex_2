@@ -1,3 +1,7 @@
+require('dotenv').config();
+const crypto = require('crypto');
+const helmet = require('helmet');
+
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
@@ -5,15 +9,23 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 
 const app = express();
-app.use(cors());
+
+app.use(helmet());
+
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:19006'
+  ]
+}));
+
 app.use(express.json());
 
-/* 🔗 CONEXIÓN A MYSQL */
 const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "123456",
-  database: "lumex_2",
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -27,8 +39,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // true para 465, false para 587
   auth: {
-    user: 'alexanderhiguerasespo@hotmail.com', // Tu correo de Hotmail
-    pass: 'Alirioht615' // ⚠️ Pon aquí tu contraseña real de Hotmail
+    user: process.env.EMAIL_USER, // Tu correo de Hotmail
+    pass: process.env.EMAIL_PASS // ⚠️ Pon aquí tu contraseña real de Hotmail
   },
   tls: {
     ciphers: 'SSLv3',
@@ -37,7 +49,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Verificar la conexión
-transporter.verify(function(error, success) {
+transporter.verify(function (error, success) {
   if (error) {
     console.log('❌ Error en configuración de email:', error);
     console.log('📝 Verifica que:');
@@ -55,7 +67,7 @@ const enviarSMS = (telefono, token) => {
   console.log(`📱 Número: ${telefono}`);
   console.log(`🔐 Código: ${token}`);
   console.log("📱".repeat(20) + "\n");
-  
+
   // En una app real, aquí iría la integración con Twilio
   return true;
 };
@@ -65,7 +77,7 @@ const enviarSMS = (telefono, token) => {
   try {
     const connection = await db.getConnection();
     console.log("✅ Conectado a MySQL (lumex_2)");
-    
+
     // Verificar que la tabla password_resets existe
     const [tables] = await connection.query("SHOW TABLES LIKE 'password_resets'");
     if (tables.length === 0) {
@@ -84,7 +96,7 @@ const enviarSMS = (telefono, token) => {
       `);
       console.log("✅ Tabla password_resets creada");
     }
-    
+
     connection.release();
   } catch (err) {
     console.log("❌ Error de conexión:", err.message);
@@ -223,7 +235,7 @@ app.post("/register", async (req, res) => {
 
   } catch (error) {
     console.error("❌ ERROR en registro:", error);
-    
+
     if (error.code === 'ER_DUP_ENTRY') {
       return res.status(400).json({
         success: false,
@@ -256,7 +268,7 @@ app.post("/forgot-password", async (req, res) => {
           message: "Debes proporcionar tu correo electrónico"
         });
       }
-      
+
       const [rows] = await db.query("SELECT * FROM usuarios WHERE email = ?", [email]);
 
       if (rows.length === 0) {
@@ -267,7 +279,7 @@ app.post("/forgot-password", async (req, res) => {
       }
 
       const user = rows[0];
-      const token = Math.floor(100000 + Math.random() * 900000).toString();
+      const token = crypto.randomInt(100000, 999999).toString();
       const expiresAt = new Date(Date.now() + 15 * 60000);
 
       await db.query(
@@ -316,9 +328,9 @@ app.post("/forgot-password", async (req, res) => {
         // Intentar búsqueda sin el '+'
         const telefonoLimpio = telefono.replace('+', '');
         console.log(`🔍 Buscando sin +: "${telefonoLimpio}"`);
-        
+
         const [rows2] = await db.query(
-          "SELECT * FROM usuarios WHERE REPLACE(telefono, '+', '') = ?", 
+          "SELECT * FROM usuarios WHERE REPLACE(telefono, '+', '') = ?",
           [telefonoLimpio]
         );
 
@@ -341,7 +353,7 @@ app.post("/forgot-password", async (req, res) => {
         telefono: user.telefono
       });
 
-      const token = Math.floor(100000 + Math.random() * 900000).toString();
+      const token = crypto.randomInt(100000, 999999).toString();
       const expiresAt = new Date(Date.now() + 15 * 60000);
 
       await db.query(
@@ -378,7 +390,7 @@ app.post("/forgot-password", async (req, res) => {
     console.error("❌ ERROR GENERAL:", error);
     res.status(500).json({
       success: false,
-      message: "Error al procesar la solicitud: " + error.message
+      message: "Error interno del servidor"
     });
   }
 });

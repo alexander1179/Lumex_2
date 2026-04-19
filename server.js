@@ -10,12 +10,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-/* 🔗 CONEXIÓN A MYSQL */
 const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
+  host: process.env.DB_HOST || "localhost",
+  user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: "lumex_2",
+  database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
@@ -29,8 +28,8 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // true para 465, false para 587
   auth: {
-    user: 'alexanderhiguerasespo@hotmail.com', // Tu correo de Hotmail
-    pass: 'Alirioht615' // ⚠️ Pon aquí tu contraseña real de Hotmail
+    user: process.env.EMAIL_USER, // Tu correo de Hotmail
+    pass: process.env.EMAIL_PASS // ⚠️ Pon aquí tu contraseña real de Hotmail
   },
   tls: {
     ciphers: 'SSLv3',
